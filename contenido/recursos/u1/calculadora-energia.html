@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U1-03 · Calculadora de energía y emisiones · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 1 · U1-03 · Explora</div>
+<h1>Calculadora de energía y emisiones de un entrenamiento</h1></header>
+<main>
+<p>Mueve los controles y observa cómo cambia la energía de un entrenamiento. La fórmula es la
+del libro: <strong>E = t · n · P · PUE</strong> (Patterson et al., 2022).</p>
+
+<label for="t">Horas de entrenamiento (t): <span id="tv"></span> h</label>
+<input type="range" id="t" min="1" max="720" value="24">
+<label for="n">Número de procesadores (n): <span id="nv"></span></label>
+<input type="range" id="n" min="1" max="256" value="8">
+<label for="p">Potencia media por procesador (P): <span id="pv"></span> kW</label>
+<input type="range" id="p" min="0.05" max="1" step="0.05" value="0.3">
+<label for="u">PUE del centro de datos: <span id="uv"></span></label>
+<input type="range" id="u" min="1" max="2.5" step="0.05" value="1.5">
+<label for="i">Intensidad de carbono de la red (g CO₂ eq/kWh)</label>
+<input type="number" id="i" min="0" max="1500" value="200">
+<div class="caja" style="font-size:15px">La intensidad de carbono depende del país, de la hora y de la
+mezcla de generación. Consulta el dato de tu red en la web del operador del sistema eléctrico.
+El valor inicial (200) es solo un ejemplo.</div>
+
+<h2>Resultado</h2>
+<p>Energía: <span class="res" id="E"></span> kWh</p>
+<p>Emisiones: <span class="res" id="C"></span> kg CO₂ eq</p>
+<p id="cmp"></p>
+
+<h2>Para pensar</h2>
+<p>Pon el PUE en 1,1 y después en 2,0 sin tocar nada más. ¿En qué proporción cambia la energía?
+¿Con cuál de las «4M» del libro se relaciona ese cambio?</p>
+</main>
+<footer>Fuente de la fórmula: Patterson, D. et al. (2022). The Carbon Footprint of Machine Learning
+Training Will Plateau, Then Shrink. <em>Computer</em>, 55(7), 18–28.
+<a href="https://doi.org/10.1109/MC.2022.3148714">doi:10.1109/MC.2022.3148714</a>.
+Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).
+Esta página no recoge datos de quien la usa.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=(x,d=1)=>x.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function calc(){
+  const t=+$('t').value,n=+$('n').value,p=+$('p').value,u=+$('u').value,i=+$('i').value;
+  $('tv').textContent=t;$('nv').textContent=n;$('pv').textContent=fmt(p,2);$('uv').textContent=fmt(u,2);
+  const E=t*n*p*u, Eit=t*n*p;
+  $('E').textContent=fmt(E);$('C').textContent=fmt(E*i/1000);
+  $('cmp').textContent='De esa energía, '+fmt(Eit)+' kWh los consumen los procesadores y '+fmt(E-Eit)+' kWh se deben al resto del centro de datos (refrigeración, distribución eléctrica…).';
+}
+document.querySelectorAll('input').forEach(e=>e.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>

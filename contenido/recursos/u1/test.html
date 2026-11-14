@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U1-04 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 1 · U1-04 · Compruébalo</div>
+<h1>Test de autoevaluación de la Unidad 1</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"Según la definición de Mitchell, un programa aprende de una experiencia E respecto a unas tareas T y una medida P si…",
+  o:["su rendimiento en T, medido por P, mejora con E","ejecuta T más rápido que un humano","no necesita datos para resolver T","P se mantiene constante al aumentar E"],c:0,
+  e:"Es la definición formal de aprendizaje de Mitchell (1997).",s:"1.2.1"},
+ {q:"En el aprendizaje automático, frente a la programación clásica…",
+  o:["las reglas (el modelo) se obtienen a partir de ejemplos","se escriben a mano todas las reglas","no se usan datos","solo se pueden resolver problemas de imagen"],c:0,
+  e:"Se aportan entradas con sus salidas deseadas y un algoritmo obtiene el modelo.",s:"1.2.2"},
+ {q:"Predecir el precio de una vivienda a partir de sus características es un problema de…",
+  o:["clasificación","regresión","agrupamiento","aprendizaje por refuerzo"],c:1,
+  e:"La salida es una cantidad, así que es regresión (aprendizaje supervisado).",s:"1.3.1"},
+ {q:"¿Qué tipo de aprendizaje trabaja con datos sin etiqueta para describir cómo se organizan?",
+  o:["Supervisado","Por refuerzo","No supervisado","Profundo"],c:2,
+  e:"El aprendizaje no supervisado no tiene una respuesta correcta que predecir.",s:"1.3.2"},
+ {q:"Según Sutton y Barto, los dos rasgos que distinguen el aprendizaje por refuerzo son…",
+  o:["las etiquetas y la regresión","la prueba y error y la recompensa diferida","el agrupamiento y la reducción de dimensionalidad","las redes convolucionales y recurrentes"],c:1,
+  e:"El agente descubre por prueba y error qué acciones dan más recompensa, y las recompensas pueden llegar más tarde.",s:"1.3.3"},
+ {q:"En el análisis de Jobin et al. (2019) sobre 84 documentos de ética de la IA, ¿cuál NO es uno de los cinco principios en los que hay convergencia?",
+  o:["Transparencia","Privacidad","Rentabilidad","No maleficencia"],c:2,
+  e:"Los cinco principios son transparencia, justicia y equidad, no maleficencia, responsabilidad y privacidad.",s:"1.5.2"},
+ {q:"El PUE de un centro de datos es…",
+  o:["la potencia de cada procesador","el cociente entre la energía total del centro y la de los equipos informáticos","las emisiones por kWh de la red","el número de horas de entrenamiento"],c:1,
+  e:"Un PUE de 1,5 significa que por cada kWh de los equipos se consume 0,5 kWh más en el resto del centro.",s:"1.6.2"},
+ {q:"En el modelo de proceso CRISP-ML(Q), ¿qué fase recibe una atención especial porque los modelos pierden rendimiento en entornos cambiantes?",
+  o:["Comprensión del negocio","Preparación de los datos","Modelado","Monitorización y mantenimiento"],c:3,
+  e:"Un modelo en producción debe vigilarse para detectar la pérdida de rendimiento.",s:"1.7.1"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>
