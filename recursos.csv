@@ -3,3 +3,8 @@ u1-01;actualizado;Estado del marco normativo europeo de la IA;recursos/u1/normat
 u1-02;ejecuta;Calcula la energía de un entrenamiento;lab/notebooks/index.html?path=u1/energia_entrenamiento.ipynb
 u1-03;explora;Calculadora de energía y emisiones;recursos/u1/calculadora-energia.html
 u1-04;compruebalo;Test de autoevaluación de la Unidad 1;recursos/u1/test.html
+u2-01;ejecuta;Estadística descriptiva y valores atípicos;lab/notebooks/index.html?path=u2/descriptiva_atipicos.ipynb
+u2-02;explora;Explorador de valores atípicos;recursos/u2/atipicos.html
+u2-03;ejecuta;Bootstrap y validación cruzada;lab/notebooks/index.html?path=u2/remuestreo.ipynb
+u2-04;ejecuta;Regresión, inferencia y ANOVA en Python;lab/notebooks/index.html?path=u2/regresion_inferencia.ipynb
+u2-05;compruebalo;Test de autoevaluación de la Unidad 2;recursos/u2/test.html

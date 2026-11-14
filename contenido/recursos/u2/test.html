@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U2-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 2 · U2-05 · Compruébalo</div>
+<h1>Test de autoevaluación de la Unidad 2</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"Una variable que indica la gravedad de una incidencia (leve, grave, crítica) está en escala…",
+  o:["nominal","ordinal","de intervalo","de razón"],c:1,
+  e:"Sus categorías tienen un orden, pero la distancia entre ellas no es conocida (Stevens, 1946).",s:"2.1.2"},
+ {q:"Si un conjunto de datos contiene un valor muy extremo, ¿qué pareja de medidas apenas se ve afectada?",
+  o:["Media y desviación típica","Mediana y rango intercuartílico","Media y rango","Desviación típica y coeficiente de variación"],c:1,
+  e:"La mediana y el RIC son robustas; la media y la desviación típica se dejan arrastrar por los extremos.",s:"2.2"},
+ {q:"¿Qué enseña el cuarteto de Anscombe?",
+  o:["Que la correlación implica causalidad","Que conjuntos con los mismos estadísticos pueden ser muy distintos, así que hay que representarlos","Que la media siempre coincide con la mediana","Que la regresión lineal no sirve nunca"],c:1,
+  e:"Los cuatro conjuntos comparten medias, varianzas, correlación y recta, pero sus gráficos son muy diferentes.",s:"2.2.4"},
+ {q:"El número de averías por turno de una línea, que ocurren al azar a un ritmo medio constante, se modela habitualmente con una distribución…",
+  o:["normal","binomial","de Poisson","t de Student"],c:2,
+  e:"La distribución de Poisson cuenta sucesos que ocurren al azar a un ritmo medio constante.",s:"2.3.2"},
+ {q:"Según Leys et al. (2013), ¿qué regla conviene usar para detectar atípicos?",
+  o:["Media ± 3 desviaciones típicas","Mediana ± k veces la desviación absoluta mediana (MAD)","Eliminar siempre el valor máximo","Media ± 1 desviación típica"],c:1,
+  e:"La media y la desviación típica se ven afectadas por los propios atípicos; la mediana y la MAD no.",s:"2.4.3"},
+ {q:"Dos variables tienen un coeficiente de correlación de Pearson cercano a 0. Eso significa que…",
+  o:["no tienen ninguna relación","no tienen relación lineal, aunque podrían tener otra","una causa la otra","son independientes con seguridad"],c:1,
+  e:"Pearson solo mide relación lineal: una relación curva puede tener r ≈ 0.",s:"2.5.2"},
+ {q:"Un contraste da p = 0,013. ¿Cuál de estas afirmaciones es correcta?",
+  o:["La probabilidad de que H₀ sea cierta es del 1,3 %","El efecto es grande e importante","Con α = 0,05 se rechaza H₀, pero el valor p no indica si el efecto es relevante","El modelo es correcto con un 98,7 % de probabilidad"],c:2,
+  e:"El valor p no mide la probabilidad de la hipótesis ni el tamaño del efecto (Wasserstein y Lazar, 2016).",s:"2.8.4"},
+ {q:"Al aumentar la complejidad de un modelo, lo habitual es que…",
+  o:["bajen tanto el error de entrenamiento como el de prueba","el error de entrenamiento baje y el de prueba baje y luego suba","el error de prueba sea siempre menor que el de entrenamiento","el sesgo y la varianza suban a la vez"],c:1,
+  e:"Es el compromiso entre sesgo y varianza: un modelo demasiado complejo sobreajusta.",s:"2.9.2"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

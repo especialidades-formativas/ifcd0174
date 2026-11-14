@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U2-02 · Explorador de valores atípicos · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+<style>
+textarea{width:100%;font:15px/1.4 ui-monospace,monospace;padding:6px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:8px}
+th,td{border-bottom:1px solid var(--claro);padding:6px 4px;text-align:left}
+td.si{color:#a12d1f;font-weight:600}td.no{color:#55666b}
+svg{width:100%;height:auto;display:block;margin-top:10px}
+</style>
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 2 · U2-02 · Explora</div>
+<h1>Explorador de valores atípicos</h1></header>
+<main>
+<p>Compara las tres reglas del apartado 2.4 del libro. Los datos iniciales son los diez tiempos de
+ciclo del ejemplo 2.1; mueve el último valor o escribe tus propios datos.</p>
+
+<label for="d">Datos (separados por espacios; decimales con punto o coma)</label>
+<textarea id="d" rows="2">41.2 39.8 40.5 42.1 40.9 39.5 41.7 40.3 40.1</textarea>
+<label for="x">Valor sospechoso: <span id="xv"></span></label>
+<input type="range" id="x" min="35" max="80" step="0.5" value="51">
+<label for="k">Umbral de la regla MAD (k): <span id="kv"></span></label>
+<input type="range" id="k" min="2" max="3.5" step="0.1" value="2.5">
+
+<svg id="g" viewBox="0 0 700 150" role="img" aria-label="Datos y límites de cada regla"></svg>
+
+<table>
+<thead><tr><th>Regla</th><th>Límites</th><th>¿Detecta el valor sospechoso?</th></tr></thead>
+<tbody id="t"></tbody>
+</table>
+<p id="nota" class="caja"></p>
+
+<h2>Para pensar</h2>
+<p>Lleva el valor sospechoso hasta 80. ¿Llega a detectarlo la regla de la media y las tres
+desviaciones típicas? Añade después diez datos más parecidos a los primeros y repite la prueba.</p>
+</main>
+<footer>Fuentes: Tukey, J. W. (1977). <em>Exploratory Data Analysis</em>. Addison-Wesley ·
+Leys, C. et al. (2013). Detecting outliers. <em>Journal of Experimental Social Psychology</em>,
+49(4), 764–766. <a href="https://doi.org/10.1016/j.jesp.2013.03.013">doi:10.1016/j.jesp.2013.03.013</a>.
+Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).
+Esta página no recoge datos de quien la usa.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const f=(v,d=2)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const med=a=>{const s=[...a].sort((p,q)=>p-q),n=s.length;return n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2};
+// percentil con interpolación lineal (mismo método por defecto que NumPy)
+const pct=(a,p)=>{const s=[...a].sort((x,y)=>x-y),h=(s.length-1)*p,i=Math.floor(h);return s[i]+(h-i)*((s[i+1]??s[i])-s[i])};
+function calc(){
+  const base=$('d').value.replace(/,/g,'.').trim().split(/\s+/).filter(t=>t!=='').map(Number).filter(v=>!isNaN(v));
+  const x=+$('x').value,k=+$('k').value;$('xv').textContent=f(x,1);$('kv').textContent=f(k,1);
+  const a=[...base,x],n=a.length;
+  if(n<4){$('t').innerHTML='<tr><td colspan=3>Introduce al menos tres datos.</td></tr>';return}
+  const m=a.reduce((p,q)=>p+q,0)/n,s=Math.sqrt(a.reduce((p,q)=>p+(q-m)**2,0)/(n-1));
+  const q1=pct(a,.25),q3=pct(a,.75),r=q3-q1,md=med(a),mad=1.4826*med(a.map(v=>Math.abs(v-md)));
+  const R=[['Media ± 3 desviaciones típicas',m-3*s,m+3*s,'#888'],
+           ['Vallas de Tukey (1,5 RIC)',q1-1.5*r,q3+1.5*r,'#1F3A40'],
+           ['Mediana ± '+f(k,1)+' MAD',md-k*mad,md+k*mad,'#1C8C96']];
+  $('t').innerHTML=R.map(([nm,lo,hi])=>{const d=x<lo||x>hi;
+    return '<tr><td>'+nm+'</td><td>['+f(lo)+'; '+f(hi)+']</td><td class="'+(d?'si':'no')+'">'+(d?'Sí':'No')+'</td></tr>'}).join('');
+  $('nota').innerHTML='n = '+n+' · media '+f(m)+' · mediana '+f(md)+' · s '+f(s)+'. Con '+n+
+    ' datos, ningún valor puede alejarse de la media más de (n − 1)/√n = <strong>'+f((n-1)/Math.sqrt(n))+'</strong> desviaciones típicas.';
+  // gráfico
+  const vals=[...a,...R.flatMap(z=>[z[1],z[2]])],lo=Math.min(...vals),hi=Math.max(...vals),pad=(hi-lo)*.05||1;
+  const X=v=>20+660*(v-lo+pad)/(hi-lo+2*pad);let g='';
+  R.forEach(([nm,l,h,c],i)=>{const y=20+i*22;g+=`<line x1="${X(l)}" x2="${X(h)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="6" opacity=".55"/><text x="${X(h)+4}" y="${y+4}" font-size="11" fill="${c}">${['3 s','Tukey','MAD'][i]}</text>`});
+  a.forEach((v,i)=>{g+=`<circle cx="${X(v)}" cy="110" r="${i==n-1?6:4}" fill="${i==n-1?'#a12d1f':'#1F3A40'}" opacity=".8"/>`});
+  g+=`<line x1="20" x2="680" y1="128" y2="128" stroke="#999"/><text x="20" y="145" font-size="11">${f(lo-pad,1)}</text><text x="680" y="145" font-size="11" text-anchor="end">${f(hi+pad,1)}</text>`;
+  $('g').innerHTML=g;
+}
+document.querySelectorAll('input,textarea').forEach(e=>e.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
