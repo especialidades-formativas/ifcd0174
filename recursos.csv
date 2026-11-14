@@ -1,5 +1,5 @@
 codigo;tipo;titulo;destino
 u1-01;actualizado;Estado del marco normativo europeo de la IA;recursos/u1/normativa-ia.html
-u1-02;ejecuta;Calcula la energía de un entrenamiento;lab/index.html?path=u1/energia_entrenamiento.ipynb
+u1-02;ejecuta;Calcula la energía de un entrenamiento;lab/notebooks/index.html?path=u1/energia_entrenamiento.ipynb
 u1-03;explora;Calculadora de energía y emisiones;recursos/u1/calculadora-energia.html
 u1-04;compruebalo;Test de autoevaluación de la Unidad 1;recursos/u1/test.html
