@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U4-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 4 · U4-05 · Compruébalo</div>
+<h1>Test de autoevaluación de la Unidad 4</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"¿Qué se guarda en el área intermedia (staging) de un proceso ETL?",
+  o:["Solo los datos ya limpios","Los datos tal como llegan de las fuentes, antes de modificarlos","El modelo entrenado","Las contraseñas de acceso a las fuentes"],c:1,
+  e:"Conservar los datos de origen permite repetir el proceso, auditarlo y rastrear el linaje de cada valor (Kimball y Caserta, 2004).",s:"4.1.1"},
+ {q:"Lees un CSV exportado con configuración española y obtienes una tabla de una sola columna. ¿Qué falta indicar?",
+  o:["La codificación del fichero","El separador (;) y el carácter decimal (,)","El nombre de la hoja","La clave primaria"],c:1,
+  e:"Con sep=\";\" y decimal=\",\" la tabla se lee con sus columnas y los números como números.",s:"4.2.1"},
+ {q:"Según Wang y Strong (1996), la calidad de los datos se define como…",
+  o:["su exactitud","su adecuación al uso que se les va a dar","su volumen","su antigüedad"],c:1,
+  e:"La exactitud es solo una dimensión; la calidad depende de la tarea.",s:"4.3.1"},
+ {q:"Un sensor deja de medir justo cuando la temperatura es muy alta. ¿Qué tipo de ausencia es?",
+  o:["MCAR","MAR","MNAR","No es una ausencia"],c:2,
+  e:"La ausencia depende del propio valor que falta: es MNAR (missing not at random).",s:"4.4.1"},
+ {q:"¿Qué efecto tiene imputar los ausentes por la media?",
+  o:["Aumenta la varianza","Reduce artificialmente la varianza","No cambia nada","Elimina los atípicos"],c:1,
+  e:"Se añaden muchos valores idénticos en el centro; en el ejemplo 4.3 la varianza cae un tercio.",s:"4.4.1"},
+ {q:"¿Por qué hay que normalizar las etiquetas (mayúsculas, espacios) antes de buscar duplicados?",
+  o:["Porque pandas lo exige","Porque dos registros iguales salvo por \"L2\" y \"l2 \" no se detectarían como duplicados","Porque así ocupan menos memoria","No hace falta"],c:1,
+  e:"Para el ordenador son valores distintos hasta que se normalizan.",s:"4.4.3"},
+ {q:"Hay atípicos que deben conservarse. ¿Qué escalado es el más adecuado?",
+  o:["Mín–máx","Estandarización","Escalado robusto (mediana y RIC)","Ninguno"],c:2,
+  e:"El escalado robusto usa estadísticos que no se ven afectados por los atípicos.",s:"4.5.2"},
+ {q:"Según el RGPD, los datos seudonimizados…",
+  o:["dejan de ser datos personales","siguen siendo datos personales","son siempre anónimos","no pueden usarse para entrenar modelos"],c:1,
+  e:"Pueden atribuirse a una persona con información adicional (la clave): el Reglamento se les sigue aplicando.",s:"4.9.2"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

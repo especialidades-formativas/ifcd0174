@@ -13,3 +13,8 @@ u3-02;ejecuta;NumPy y pandas;lab/notebooks/index.html?path=u3/numpy_pandas.ipynb
 u3-03;explora;Explorador de k vecinos más próximos;recursos/u3/knn.html
 u3-04;ejecuta;Algoritmos desde cero y scikit-learn;lab/notebooks/index.html?path=u3/desde_cero_sklearn.ipynb
 u3-05;compruebalo;Test de autoevaluación de la Unidad 3;recursos/u3/test.html
+u4-01;ejecuta;Extracción y diagnóstico de calidad;lab/notebooks/index.html?path=u4/extraccion_calidad.ipynb
+u4-02;explora;Explorador de valores ausentes;recursos/u4/imputacion.html
+u4-03;ejecuta;Limpieza, transformación e integración;lab/notebooks/index.html?path=u4/limpieza_transformacion.ipynb
+u4-04;ejecuta;Seudonimización y k-anonimato;lab/notebooks/index.html?path=u4/seudonimizacion.ipynb
+u4-05;compruebalo;Test de autoevaluación de la Unidad 4;recursos/u4/test.html

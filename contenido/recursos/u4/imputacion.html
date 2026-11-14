@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U4-02 · Explorador de valores ausentes · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+<style>
+svg{width:100%;height:auto;display:block;margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:15px;margin-top:8px}
+th,td{border-bottom:1px solid var(--claro);padding:6px 4px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+td.mal{color:#a12d1f;font-weight:600}
+.fila{display:flex;gap:16px;flex-wrap:wrap}
+.fila label{margin:0}
+</style>
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 4 · U4-02 · Explora</div>
+<h1>Explorador de valores ausentes</h1></header>
+<main>
+<p>Se simulan 1000 medidas de temperatura (media 50, desviación típica 5) y se borra una
+parte. Elige cuántas faltan, por qué faltan y cómo se tratan, y compara el resultado con
+los datos completos (apartado 4.4 del libro).</p>
+
+<label for="p">Porcentaje de valores ausentes: <span id="pv"></span></label>
+<input type="range" id="p" min="0" max="60" step="5" value="30">
+
+<p><b>Mecanismo</b></p>
+<div class="fila">
+ <label><input type="radio" name="m" value="mcar" checked> MCAR: faltan al azar</label>
+ <label><input type="radio" name="m" value="mnar"> MNAR: faltan sobre todo los valores altos</label>
+</div>
+<p><b>Tratamiento</b></p>
+<div class="fila">
+ <label><input type="radio" name="t" value="elim" checked> eliminar las filas</label>
+ <label><input type="radio" name="t" value="media"> imputar la media</label>
+ <label><input type="radio" name="t" value="mediana"> imputar la mediana</label>
+</div>
+
+<svg id="g" viewBox="0 0 640 220" role="img" aria-label="Histograma de los datos completos y de los datos tratados"></svg>
+
+<table>
+<thead><tr><th></th><th>n</th><th>Media</th><th>Desviación típica</th></tr></thead>
+<tbody id="t"></tbody>
+</table>
+<p id="nota" class="caja"></p>
+
+<h2>Para pensar</h2>
+<p>Con MCAR, eliminar las filas apenas sesga la media. ¿Ocurre lo mismo con MNAR? ¿Hay algún
+tratamiento de los tres que corrija el sesgo cuando los datos faltan por su propio valor?</p>
+</main>
+<footer>Fuentes: Rubin, D. B. (1976). Inference and Missing Data. <em>Biometrika</em>, 63(3),
+581–592. <a href="https://doi.org/10.1093/biomet/63.3.581">doi:10.1093/biomet/63.3.581</a> ·
+Little, R. J. A. y Rubin, D. B. (2019). <em>Statistical Analysis with Missing Data</em> (3.ª ed.).
+Wiley. <a href="https://doi.org/10.1002/9781119482260">doi:10.1002/9781119482260</a>.
+Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).
+Esta página no recoge datos de quien la usa.</footer>
+<script>
+const $=id=>document.getElementById(id), N=1000;
+let s=7;const rnd=()=>{s=(s*16807)%2147483647;return (s-1)/2147483646};
+const gauss=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)};
+const X=Array.from({length:N},()=>50+5*gauss()), U=Array.from({length:N},rnd);
+const orden=X.map((v,i)=>[v+3*gauss(),i]).sort((a,b)=>b[0]-a[0]).map(p=>p[1]); // MNAR: altos primero, con ruido
+const mean=a=>a.reduce((p,q)=>p+q,0)/a.length;
+const sd=a=>{const m=mean(a);return Math.sqrt(a.reduce((p,q)=>p+(q-m)**2,0)/(a.length-1))};
+const med=a=>{const t=[...a].sort((p,q)=>p-q),n=t.length;return n%2?t[(n-1)/2]:(t[n/2-1]+t[n/2])/2};
+const f=(v,d=2)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function calc(){
+  const p=+$('p').value/100,m=document.querySelector('input[name=m]:checked').value,t=document.querySelector('input[name=t]:checked').value;
+  $('pv').textContent=Math.round(p*100)+' %';
+  const falta=new Array(N).fill(false),k=Math.round(p*N);
+  if(m==='mcar'){X.forEach((_,i)=>falta[i]=U[i]<p)}else{for(let j=0;j<k;j++)falta[orden[j]]=true}
+  const obs=X.filter((_,i)=>!falta[i]);
+  let res=obs;
+  if(t!=='elim'&&obs.length){const r=t==='media'?mean(obs):med(obs);res=X.map((v,i)=>falta[i]?r:v)}
+  const nf=falta.filter(Boolean).length;
+  const filas=[['Datos completos',X],['Tras el tratamiento',res]];
+  const m0=mean(X),s0=sd(X),m1=res.length?mean(res):NaN,s1=res.length>1?sd(res):NaN;
+  $('t').innerHTML=filas.map(([n,a],i)=>`<tr><td>${n}</td><td>${a.length}</td><td class="${i&&Math.abs(m1-m0)>0.5?'mal':''}">${f(mean(a))}</td><td class="${i&&Math.abs(s1-s0)/s0>0.1?'mal':''}">${f(sd(a))}</td></tr>`).join('');
+  $('nota').textContent=`Faltan ${nf} valores. La media se desvía ${f(m1-m0)} y la desviación típica cambia un ${f(100*(s1-s0)/s0,0)} % respecto a los datos completos.`;
+  // histogramas
+  const lo=30,hi=70,B=40,w=(hi-lo)/B,h=a=>{const c=new Array(B).fill(0);a.forEach(v=>{const j=Math.floor((v-lo)/w);if(j>=0&&j<B)c[j]++});return c};
+  const h0=h(X),h1=h(res),mx=Math.max(...h0,...h1),bw=600/B,Y=v=>190-170*v/mx;let g='';
+  h1.forEach((c,j)=>g+=`<rect x="${20+j*bw+1}" y="${Y(c)}" width="${bw-2}" height="${190-Y(c)}" fill="#1C8C96" opacity=".75"/>`);
+  g+='<polyline fill="none" stroke="#1F3A40" stroke-width="2" points="'+h0.map((c,j)=>`${20+j*bw},${Y(c)} ${20+(j+1)*bw},${Y(c)}`).join(' ')+'"/>';
+  g+='<line x1="20" x2="620" y1="190" y2="190" stroke="#999"/>';
+  for(let v=30;v<=70;v+=10)g+=`<text x="${20+(v-lo)/w*bw}" y="208" font-size="11" text-anchor="middle">${v}</text>`;
+  g+='<text x="620" y="16" font-size="11" text-anchor="end" fill="#1F3A40">línea: datos completos · barras: tras el tratamiento</text>';
+  $('g').innerHTML=g;
+}
+document.querySelectorAll('input').forEach(e=>e.addEventListener('input',calc));calc();
+</script>
+</body>
+</html>
