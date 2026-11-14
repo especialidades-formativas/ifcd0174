@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U3-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 3 · U3-05 · Compruébalo</div>
+<h1>Test de autoevaluación de la Unidad 3</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"¿Qué marca en Python el bloque de instrucciones que depende de un if, un for o una función?",
+  o:["Las llaves { }","La indentación (el sangrado de las líneas)","La palabra end","Un punto y coma al final"],c:1,
+  e:"El bloque se marca con la indentación, por convención de cuatro espacios (PEP 8). Si es incorrecta, el programa no funciona.",s:"3.1.3"},
+ {q:"¿Para qué sirve un entorno virtual?",
+  o:["Para ejecutar Python sin instalarlo","Para aislar los paquetes y versiones de cada proyecto y poder reproducirlos","Para que el código se ejecute más rápido","Para trabajar sin conexión a internet"],c:1,
+  e:"Cada proyecto tiene su propia instalación de paquetes, y requirements.txt permite reproducirla en otro equipo.",s:"3.2.3"},
+ {q:"Necesitas guardar los hiperparámetros de un modelo con su nombre y su valor. ¿Qué estructura es la más adecuada?",
+  o:["Una tupla","Un conjunto","Un diccionario","Una cadena de texto"],c:2,
+  e:"Un diccionario asocia claves (los nombres) con valores, y se puede modificar.",s:"3.4"},
+ {q:"¿Qué significa que una operación de NumPy está vectorizada?",
+  o:["Que solo funciona con vectores de una dimensión","Que se aplica a todos los elementos del array a la vez con código compilado, sin bucles de Python","Que se ejecuta en la tarjeta gráfica","Que devuelve siempre un vector"],c:1,
+  e:"La vectorización evita los bucles de Python y suele ser un orden de magnitud más rápida o más.",s:"3.5.2"},
+ {q:"En pandas, ¿qué hace prod.groupby(\"linea\")[\"piezas\"].sum()?",
+  o:["Ordena la tabla por línea","Suma las piezas de cada línea","Cuenta cuántas líneas hay","Elimina las líneas repetidas"],c:1,
+  e:"Divide la tabla por línea, suma las piezas de cada grupo y combina los resultados.",s:"3.6.3"},
+ {q:"En el clasificador k-NN, ¿qué ocurre al aumentar mucho k?",
+  o:["La frontera de decisión se vuelve más irregular","La frontera se suaviza y el modelo se vuelve menos flexible","El error de entrenamiento siempre es 0","El modelo deja de necesitar los datos de entrenamiento"],c:1,
+  e:"Con k grande cada predicción promedia muchos vecinos: menos varianza y más sesgo.",s:"3.8.2"},
+ {q:"¿Por qué conviene estandarizar las variables antes de aplicar k-NN?",
+  o:["Porque scikit-learn lo exige","Porque la distancia euclídea daría más peso a las variables de mayor magnitud","Porque reduce el número de variables","Porque así el modelo se entrena más rápido"],c:1,
+  e:"En el ejemplo de los vinos, la exactitud cae del 94,4 % al 72,2 % sin estandarizar.",s:"3.8.2"},
+ {q:"¿Cuál es la principal ventaja de usar un pipeline de scikit-learn?",
+  o:["Que el modelo ocupa menos memoria","Que el preprocesado se aprende solo con los datos de entrenamiento y se evita la fuga de información","Que no hace falta elegir hiperparámetros","Que permite usar varios lenguajes"],c:1,
+  e:"Si el escalado se calcula con todos los datos, el modelo ya ha visto algo de la parte de prueba (Kaufman et al., 2012).",s:"3.9.2"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

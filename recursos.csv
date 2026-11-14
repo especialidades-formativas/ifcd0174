@@ -8,3 +8,8 @@ u2-02;explora;Explorador de valores atípicos;recursos/u2/atipicos.html
 u2-03;ejecuta;Bootstrap y validación cruzada;lab/notebooks/index.html?path=u2/remuestreo.ipynb
 u2-04;ejecuta;Regresión, inferencia y ANOVA en Python;lab/notebooks/index.html?path=u2/regresion_inferencia.ipynb
 u2-05;compruebalo;Test de autoevaluación de la Unidad 2;recursos/u2/test.html
+u3-01;ejecuta;Primeros pasos en Python;lab/notebooks/index.html?path=u3/primeros_pasos.ipynb
+u3-02;ejecuta;NumPy y pandas;lab/notebooks/index.html?path=u3/numpy_pandas.ipynb
+u3-03;explora;Explorador de k vecinos más próximos;recursos/u3/knn.html
+u3-04;ejecuta;Algoritmos desde cero y scikit-learn;lab/notebooks/index.html?path=u3/desde_cero_sklearn.ipynb
+u3-05;compruebalo;Test de autoevaluación de la Unidad 3;recursos/u3/test.html
