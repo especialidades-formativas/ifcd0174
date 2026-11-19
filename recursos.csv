@@ -33,3 +33,8 @@ u7-02;explora;Explorador de iteración de valores: el mantenimiento de una máqu
 u7-03;ejecuta;Q-learning y SARSA con Gymnasium;lab/notebooks/index.html?path=u7/qlearning_gymnasium.ipynb
 u7-04;ejecuta;Una Deep Q-Network en CartPole;lab/notebooks/index.html?path=u7/dqn_cartpole.ipynb
 u7-05;compruebalo;Test de autoevaluación de la Unidad 7;recursos/u7/test.html
+u8-01;explora;Explorador de una red neuronal: hacia delante y hacia atrás;recursos/u8/red.html
+u8-02;ejecuta;Perceptrón, retropropagación y clasificación de dígitos;lab/notebooks/index.html?path=u8/redes_digitos.ipynb
+u8-03;ejecuta;Regularización, regresión y eficiencia;lab/notebooks/index.html?path=u8/regularizacion_eficiencia.ipynb
+u8-04;ejecuta;Una red de principio a fin;lab/notebooks/index.html?path=u8/proyecto_red.ipynb
+u8-05;compruebalo;Test de autoevaluación de la Unidad 8;recursos/u8/test.html

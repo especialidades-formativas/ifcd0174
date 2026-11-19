@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U8-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 8 · U8-05 · Comprueba</div>
+<h1>Test de autoevaluación de la Unidad 8</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"¿Por qué un perceptrón simple no puede aprender la operación XOR?",
+  o:["Porque tiene pocos datos","Porque sus clases no se pueden separar con una recta, y el perceptrón solo traza fronteras rectas","Porque usa la función sigmoide","Porque no tiene sesgo"],c:1,
+  e:"Una neurona sola separa con una recta (o un plano). Con una capa oculta, la red transforma los datos en una representación donde XOR sí es separable.",s:"8.1.2"},
+ {q:"¿Qué ocurre si una red con varias capas no usa funciones de activación no lineales?",
+  o:["Aprende más deprisa","Equivale a un modelo lineal, por muchas capas que tenga","Solo puede clasificar en dos clases","Sobreajusta siempre"],c:1,
+  e:"Una suma ponderada de sumas ponderadas sigue siendo una suma ponderada. La no linealidad (ReLU, tanh, sigmoide) es lo que da capacidad a las capas.",s:"8.2.2"},
+ {q:"¿Qué calcula la retropropagación?",
+  o:["La salida de la red para un caso nuevo","Los gradientes de la pérdida respecto a todos los pesos, recorriendo la red hacia atrás con la regla de la cadena","El número óptimo de capas","La mejor tasa de aprendizaje"],c:1,
+  e:"Primero se recorre la red hacia delante para obtener la pérdida y después hacia atrás, reutilizando en cada capa lo calculado en la siguiente.",s:"8.3.2"},
+ {q:"Entrenas con SGD y la pérdida oscila y no baja, o incluso sube. ¿Qué es lo más probable?",
+  o:["La tasa de aprendizaje es demasiado grande","La red es demasiado pequeña","Faltan épocas","Los datos están estandarizados"],c:0,
+  e:"Con η = 1 en el ejemplo 3 los pasos se pasan de largo y el entrenamiento se detiene en 0,43; con η = 0,1 baja a 0,003.",s:"8.4.2"},
+ {q:"Una red da un error de 0,001 en entrenamiento y de 4,2 en datos nuevos. ¿Qué harías primero?",
+  o:["Añadir más capas","Quitar la estandarización","Regularizar (por ejemplo, subir alpha) o usar parada temprana","Entrenar más épocas"],c:2,
+  e:"Es sobreajuste: la red memoriza. En el ejemplo 4, con alpha = 0,1 el error en datos nuevos baja de 4,197 a 0,134.",s:"8.5.1"},
+ {q:"Con 442 pacientes y 10 variables, una regresión lineal obtiene R² = 0,489 y una red (64, 64), 0,374. ¿Qué concluyes?",
+  o:["Que la red está mal programada","Que con pocos datos tabulares y relaciones casi lineales, un modelo sencillo puede ser mejor","Que el R² no sirve para redes","Que hay que añadir más capas"],c:1,
+  e:"Las redes destacan con muchos datos y estructura compleja. Por eso siempre se comparan con un modelo de referencia sencillo.",s:"8.7"},
+ {q:"¿Por qué una capa convolucional necesita muchos menos parámetros que una densa sobre una imagen?",
+  o:["Porque usa números de 16 bits","Porque cada filtro es pequeño y se reutiliza en todas las posiciones de la imagen","Porque ignora los bordes","Porque solo funciona con imágenes pequeñas"],c:1,
+  e:"16 filtros de 3×3 tienen 160 parámetros sea cual sea la imagen; una capa densa de 16 neuronas sobre 100×100 píxeles necesita 160 016.",s:"8.8.1"},
+ {q:"¿Qué cambio reduce la memoria de una red a la mitad sin perder exactitud en el ejemplo de los dígitos?",
+  o:["Usar números de 32 bits en lugar de 64","Duplicar el número de neuronas","Quitar la estandarización","Entrenar más épocas"],c:0,
+  e:"La red (256, 256) pasa de 664 KB a 332 KB y tarda menos de la mitad, con el mismo 98,0 % de acierto.",s:"8.9"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>
