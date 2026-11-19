@@ -58,8 +58,8 @@ function calc(){
   const m=a.reduce((p,q)=>p+q,0)/n,s=Math.sqrt(a.reduce((p,q)=>p+(q-m)**2,0)/(n-1));
   const q1=pct(a,.25),q3=pct(a,.75),r=q3-q1,md=med(a),mad=1.4826*med(a.map(v=>Math.abs(v-md)));
   const R=[['Media ± 3 desviaciones típicas',m-3*s,m+3*s,'#888'],
-           ['Vallas de Tukey (1,5 RIC)',q1-1.5*r,q3+1.5*r,'#1F3A40'],
-           ['Mediana ± '+f(k,1)+' MAD',md-k*mad,md+k*mad,'#1C8C96']];
+           ['Vallas de Tukey (1,5 RIC)',q1-1.5*r,q3+1.5*r,'#14304F'],
+           ['Mediana ± '+f(k,1)+' MAD',md-k*mad,md+k*mad,'#1F5FA8']];
   $('t').innerHTML=R.map(([nm,lo,hi])=>{const d=x<lo||x>hi;
     return '<tr><td>'+nm+'</td><td>['+f(lo)+'; '+f(hi)+']</td><td class="'+(d?'si':'no')+'">'+(d?'Sí':'No')+'</td></tr>'}).join('');
   $('nota').innerHTML='n = '+n+' · media '+f(m)+' · mediana '+f(md)+' · s '+f(s)+'. Con '+n+
@@ -68,7 +68,7 @@ function calc(){
   const vals=[...a,...R.flatMap(z=>[z[1],z[2]])],lo=Math.min(...vals),hi=Math.max(...vals),pad=(hi-lo)*.05||1;
   const X=v=>20+660*(v-lo+pad)/(hi-lo+2*pad);let g='';
   R.forEach(([nm,l,h,c],i)=>{const y=20+i*22;g+=`<line x1="${X(l)}" x2="${X(h)}" y1="${y}" y2="${y}" stroke="${c}" stroke-width="6" opacity=".55"/><text x="${X(h)+4}" y="${y+4}" font-size="11" fill="${c}">${['3 s','Tukey','MAD'][i]}</text>`});
-  a.forEach((v,i)=>{g+=`<circle cx="${X(v)}" cy="110" r="${i==n-1?6:4}" fill="${i==n-1?'#a12d1f':'#1F3A40'}" opacity=".8"/>`});
+  a.forEach((v,i)=>{g+=`<circle cx="${X(v)}" cy="110" r="${i==n-1?6:4}" fill="${i==n-1?'#a12d1f':'#14304F'}" opacity=".8"/>`});
   g+=`<line x1="20" x2="680" y1="128" y2="128" stroke="#999"/><text x="20" y="145" font-size="11">${f(lo-pad,1)}</text><text x="680" y="145" font-size="11" text-anchor="end">${f(hi+pad,1)}</text>`;
   $('g').innerHTML=g;
 }

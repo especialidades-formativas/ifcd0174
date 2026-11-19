@@ -18,3 +18,8 @@ u4-02;explora;Explorador de valores ausentes;recursos/u4/imputacion.html
 u4-03;ejecuta;Limpieza, transformación e integración;lab/notebooks/index.html?path=u4/limpieza_transformacion.ipynb
 u4-04;ejecuta;Seudonimización y k-anonimato;lab/notebooks/index.html?path=u4/seudonimizacion.ipynb
 u4-05;compruebalo;Test de autoevaluación de la Unidad 4;recursos/u4/test.html
+u5-01;ejecuta;Regresión regularizada y regresión logística;lab/notebooks/index.html?path=u5/regresion_logistica.ipynb
+u5-02;ejecuta;Árboles, conjuntos y SVM;lab/notebooks/index.html?path=u5/arboles_conjuntos_svm.ipynb
+u5-03;explora;Explorador del umbral de decisión;recursos/u5/umbral.html
+u5-04;ejecuta;Validación, métricas y clases desequilibradas;lab/notebooks/index.html?path=u5/validacion_metricas.ipynb
+u5-05;compruebalo;Test de autoevaluación de la Unidad 5;recursos/u5/test.html

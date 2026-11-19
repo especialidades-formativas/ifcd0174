@@ -82,11 +82,11 @@ function calc(){
   // histogramas
   const lo=30,hi=70,B=40,w=(hi-lo)/B,h=a=>{const c=new Array(B).fill(0);a.forEach(v=>{const j=Math.floor((v-lo)/w);if(j>=0&&j<B)c[j]++});return c};
   const h0=h(X),h1=h(res),mx=Math.max(...h0,...h1),bw=600/B,Y=v=>190-170*v/mx;let g='';
-  h1.forEach((c,j)=>g+=`<rect x="${20+j*bw+1}" y="${Y(c)}" width="${bw-2}" height="${190-Y(c)}" fill="#1C8C96" opacity=".75"/>`);
-  g+='<polyline fill="none" stroke="#1F3A40" stroke-width="2" points="'+h0.map((c,j)=>`${20+j*bw},${Y(c)} ${20+(j+1)*bw},${Y(c)}`).join(' ')+'"/>';
+  h1.forEach((c,j)=>g+=`<rect x="${20+j*bw+1}" y="${Y(c)}" width="${bw-2}" height="${190-Y(c)}" fill="#1F5FA8" opacity=".75"/>`);
+  g+='<polyline fill="none" stroke="#14304F" stroke-width="2" points="'+h0.map((c,j)=>`${20+j*bw},${Y(c)} ${20+(j+1)*bw},${Y(c)}`).join(' ')+'"/>';
   g+='<line x1="20" x2="620" y1="190" y2="190" stroke="#999"/>';
   for(let v=30;v<=70;v+=10)g+=`<text x="${20+(v-lo)/w*bw}" y="208" font-size="11" text-anchor="middle">${v}</text>`;
-  g+='<text x="620" y="16" font-size="11" text-anchor="end" fill="#1F3A40">línea: datos completos · barras: tras el tratamiento</text>';
+  g+='<text x="620" y="16" font-size="11" text-anchor="end" fill="#14304F">línea: datos completos · barras: tras el tratamiento</text>';
   $('g').innerHTML=g;
 }
 document.querySelectorAll('input').forEach(e=>e.addEventListener('input',calc));calc();

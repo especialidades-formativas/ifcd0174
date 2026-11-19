@@ -17,7 +17,7 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 SITE = RAIZ / "site"
 BASE = "https://especialidades-formativas.github.io/ifcd0174/"
-TIPOS = {"ejecuta": "Ejecuta", "explora": "Explora", "compruebalo": "Compruébalo", "actualizado": "Actualizado"}
+TIPOS = {"ejecuta": "Ejecuta", "explora": "Explora", "compruebalo": "Comprueba", "actualizado": "Actualizado"}
 
 
 def leer_tabla():

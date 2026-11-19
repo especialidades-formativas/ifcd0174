@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U5-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 5 · U5-05 · Comprueba</div>
+<h1>Test de autoevaluación de la Unidad 5</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"Quieres predecir cuántos kilovatios hora consumirá una máquina mañana. ¿Qué tipo de problema es?",
+  o:["Clasificación binaria","Regresión","Clasificación multiclase","Aprendizaje no supervisado"],c:1,
+  e:"La respuesta es numérica: es un problema de regresión.",s:"5.1.1"},
+ {q:"¿Qué diferencia al lasso de la regresión ridge?",
+  o:["El lasso no necesita estandarizar","El lasso puede anular coeficientes y seleccionar variables","La ridge solo sirve para clasificación","No hay diferencia práctica"],c:1,
+  e:"La penalización por valores absolutos anula exactamente algunos coeficientes; la ridge los encoge sin anularlos. En el ejemplo 5.2 el lasso elimina tres variables.",s:"5.2.1"},
+ {q:"En un control de calidad, dejar pasar una pieza defectuosa cuesta mucho más que revisar una correcta. ¿Qué haces con el umbral de la regresión logística?",
+  o:["Lo subo por encima de 0,5","Lo bajo por debajo de 0,5","Lo dejo en 0,5 porque es el correcto","El umbral no influye en los errores"],c:1,
+  e:"Bajar el umbral detecta más positivos a cambio de más falsas alarmas; se elige según los costes.",s:"5.3.2"},
+ {q:"Un árbol sin límite de profundidad acierta el 100 % de los casos de entrenamiento. ¿Qué es lo más probable?",
+  o:["Que sea el mejor modelo posible","Que haya memorizado los datos y generalice peor","Que los datos no tengan ruido","Que haya que añadir más árboles"],c:1,
+  e:"En el ejemplo 5.5 ese árbol obtiene en prueba menos aciertos que uno de profundidad 3: es sobreajuste.",s:"5.4.2"},
+ {q:"¿Qué añade un bosque aleatorio al bagging de árboles?",
+  o:["Árboles más profundos","En cada división solo se puede elegir entre un subconjunto aleatorio de variables","Pesos mayores para los casos mal clasificados","Una función logística en cada hoja"],c:1,
+  e:"Así los árboles se parecen menos entre sí y su promedio reduce más la varianza (Breiman, 2001). Los pesos crecientes son propios de AdaBoost.",s:"5.5.1"},
+ {q:"Has elegido los hiperparámetros con GridSearchCV. ¿Por qué best_score_ no es una buena estimación del rendimiento futuro?",
+  o:["Porque se calcula con los datos de prueba","Porque es la mejor de muchas configuraciones medidas con los mismos datos y por eso es optimista","Porque solo usa una partición","Porque ignora la estandarización"],c:1,
+  e:"La validación cruzada anidada corrige ese optimismo: en el ejemplo 5.8, 0,982 frente a 0,974.",s:"5.7.3"},
+ {q:"De 25 piezas que el modelo marca como defectuosas, 22 lo son. De las 66 defectuosas reales, detecta 22. ¿Cuáles son su precisión y su exhaustividad?",
+  o:["Precisión 0,333 y exhaustividad 0,880","Precisión 0,880 y exhaustividad 0,333","Ambas 0,969","Precisión 0,880 y exhaustividad 0,969"],c:1,
+  e:"Precisión = 22/25 = 0,880 (de lo marcado, cuánto es cierto); exhaustividad = 22/66 = 0,333 (de lo real, cuánto se detecta).",s:"5.8.2"},
+ {q:"Solo el 4 % de las piezas son defectuosas. ¿Qué métrica es la menos informativa para evaluar un detector?",
+  o:["La exactitud","El MCC","La precisión media (área bajo la curva PR)","La exhaustividad de la clase defectuosa"],c:0,
+  e:"Decir siempre «correcta» ya da un 96 % de exactitud sin detectar nada (ejemplo 5.10).",s:"5.9.1"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

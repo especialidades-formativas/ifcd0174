@@ -1,4 +1,4 @@
-:root{--acento:#1C8C96;--petroleo:#1F3A40;--fondo:#EAF6F7;--claro:#BFE6E9}
+:root{--acento:#1F5FA8;--petroleo:#14304F;--fondo:#EEF4FA;--claro:#CFE0F2}
 *{box-sizing:border-box}
 body{margin:0;font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1d2427;background:#fff}
 header{background:var(--petroleo);color:#fff;padding:14px 18px}
