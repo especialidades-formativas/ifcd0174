@@ -13,3 +13,5 @@ scikit-learn==1.9.1
 gymnasium==1.4.0
 duckdb==2.0.0
 pyarrow==26.0.1
+seaborn==0.13.2
+plotly==7.1.0

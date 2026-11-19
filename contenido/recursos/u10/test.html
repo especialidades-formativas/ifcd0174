@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U10-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 10 · U10-05 · Comprueba</div>
+<h1>Test de autoevaluación de la Unidad 10</h1></header>
+<main>
+<p>Diez preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"¿En qué propiedad visual conviene codificar los números que el lector debe comparar con precisión?",
+  o:["En el color","En el área","En la posición sobre un eje común","En el ángulo"],c:2,
+  e:"Los experimentos de percepción sitúan la posición sobre una escala común como la codificación que se lee con más precisión; el área, el ángulo y el color quedan por detrás.",s:"10.2"},
+ {q:"¿Por qué un gráfico de barras debe empezar en cero?",
+  o:["Por convención estética","Porque la longitud de la barra representa la cantidad: si se corta el eje, las diferencias parecen mayores","Porque Matplotlib lo exige","No es necesario"],c:1,
+  e:"En el ejemplo, febrero (333) y agosto (385) difieren un 16 %; con el eje ajustado parecen muy distintos.",s:"10.2"},
+ {q:"¿Por qué conviene dibujar la figura al tamaño en que se va a publicar?",
+  o:["Para que ocupe más","Para que los textos y las líneas tengan el tamaño previsto y no haya que escalarla","Porque si no, no se puede guardar en PDF","Para que los colores sean más vivos"],c:1,
+  e:"La plantilla de la unidad fija 4,4 pulgadas (11 cm), la anchura de la página del libro.",s:"10.3"},
+ {q:"¿Qué problema tiene la escala de color jet (arcoíris) para representar valores?",
+  o:["Tiene pocos colores","Su luminosidad sube y baja (tres cambios de sentido), crea fronteras falsas y no se lee bien en grises ni con daltonismo","No funciona en Matplotlib","Es demasiado oscura"],c:1,
+  e:"La luminancia de viridis crece siempre; la de jet no, así que el orden de los valores se pierde.",s:"10.4"},
+ {q:"En Seaborn, ¿para qué sirve common_norm=False en histplot con hue?",
+  o:["Para normalizar cada grupo por separado y poder comparar formas aunque un grupo sea mucho más pequeño","Para quitar la leyenda","Para usar una escala logarítmica","Para ordenar los grupos"],c:0,
+  e:"Las lecturas con avería en 24 h son solo un 6 %: sin esa opción su histograma quedaría aplastado.",s:"10.5"},
+ {q:"Un HTML de Plotly ocupa 4719 KB con la biblioteca dentro y 16 KB enlazándola. ¿Cuándo es preferible la primera opción?",
+  o:["Siempre","Cuando el archivo se va a abrir sin conexión a internet","Cuando hay muchos datos","Nunca"],c:1,
+  e:"Con la biblioteca enlazada el navegador la descarga una vez y la guarda; incrustada solo compensa sin conexión.",s:"10.6"},
+ {q:"Tienes 1,75 millones de puntos y el gráfico de dispersión es una mancha. ¿Qué haces?",
+  o:["Hacer los puntos más grandes","Agregar en celdas (por ejemplo, hexágonos con escala logarítmica)","Usar una tarta","Guardar en SVG"],c:1,
+  e:"Los hexágonos muestran a la vez dónde se concentran los datos y los casos aislados.",s:"10.7"},
+ {q:"Para una nube de 100 000 puntos que se publicará en una web, ¿qué formato es el más adecuado?",
+  o:["SVG","PDF","WebP o PNG a 150 ppp","PNG a 300 ppp"],c:2,
+  e:"En el ejemplo, el SVG ocupa 14 282 KB y el WebP 23 KB: más de 600 veces menos datos que transmitir.",s:"10.8"},
+ {q:"¿Cuál es el mejor título para un gráfico de comunicación?",
+  o:["Temperatura media mensual","Gráfico 3","Desde octubre, la mitad de la flota marca 3 °C más: revisar sus sensores","temperatura_media_por_grupo"],c:2,
+  e:"El título dice la conclusión y qué hacer; el lector no tiene que descifrarla.",s:"10.9"},
+ {q:"¿Qué error hace que el cruce de dos líneas dependa de una decisión arbitraria?",
+  o:["Usar dos ejes verticales con escalas distintas","Etiquetar las líneas directamente","Usar gris para el contexto","Empezar las barras en cero"],c:0,
+  e:"Con dos escalas, el cruce y la aparente relación dependen de cómo se elija cada escala.",s:"10.9.1"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

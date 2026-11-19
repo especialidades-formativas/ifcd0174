@@ -43,3 +43,8 @@ u9-02;ejecuta;Aprendizaje incremental y búsqueda de hiperparámetros;lab/notebo
 u9-03;explora;Explorador de deriva: KS y PSI de una variable;recursos/u9/deriva.html
 u9-04;ejecuta;Interpretar el modelo, vigilar la deriva y análisis completo;lab/notebooks/index.html?path=u9/explicar_vigilar.ipynb
 u9-05;compruebalo;Test de autoevaluación de la Unidad 9;recursos/u9/test.html
+u10-01;ejecuta;Matplotlib, color y Seaborn;lab/notebooks/index.html?path=u10/matplotlib_seaborn.ipynb
+u10-02;ejecuta;Gráficos interactivos con Plotly y muchos datos;lab/notebooks/index.html?path=u10/plotly_muchos.ipynb
+u10-03;explora;Calculadora de tamaño y energía de un gráfico;recursos/u10/energia.html
+u10-04;ejecuta;Tamaños, comunicación e informe visual de la flota;lab/notebooks/index.html?path=u10/informe_visual.ipynb
+u10-05;compruebalo;Test de autoevaluación de la Unidad 10;recursos/u10/test.html
