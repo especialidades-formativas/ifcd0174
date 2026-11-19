@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U7-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 7 · U7-05 · Comprueba</div>
+<h1>Test de autoevaluación de la Unidad 7</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"¿Qué distingue al aprendizaje por refuerzo del aprendizaje supervisado?",
+  o:["Que usa redes neuronales","Que el agente recibe una evaluación de sus acciones, no la respuesta correcta, y sus decisiones cambian los datos que ve","Que no necesita datos","Que solo sirve para juegos"],c:1,
+  e:"La recompensa dice cuánto ha valido la acción tomada, pero no cuál era la mejor; además, puede llegar tarde y el agente solo observa las consecuencias de lo que hace.",s:"7.1.2"},
+ {q:"En un bandido multibrazo, un agente elige siempre la opción con mejor media hasta ahora. ¿Cuál es el riesgo?",
+  o:["Ninguno: es la estrategia óptima","Gastar demasiado tiempo explorando","Quedarse con una opción peor porque la mejor tuvo mala suerte en sus primeras pruebas","Que las medias no se puedan calcular"],c:2,
+  e:"Sin explorar, en el ejemplo 1 solo se elige la mejor configuración el 50,4 % de las veces; con épsilon-voraz (0,1), el 77,1 %.",s:"7.2.2"},
+ {q:"Con un factor de descuento γ = 0,9, ¿cuánto pesa hoy una recompensa que llegará dentro de 10 pasos?",
+  o:["Nada","Unas 0,35 veces su valor","0,9 veces su valor","Lo mismo que hoy"],c:1,
+  e:"0,9 elevado a 10 es aproximadamente 0,35. Un γ pequeño hace al agente miope; uno cercano a 1, previsor.",s:"7.3.2"},
+ {q:"¿Qué necesita la iteración de valores que no necesita Q-learning?",
+  o:["Conocer el modelo: las probabilidades de transición y las recompensas","Una red neuronal","Un factor de descuento","Explorar con épsilon-voraz"],c:0,
+  e:"La programación dinámica aplica la ecuación de Bellman con el modelo conocido; Q-learning aprende directamente de la experiencia, sin modelo.",s:"7.4.2"},
+ {q:"En el acantilado, Q-learning aprende el camino corto junto al borde y SARSA uno más alejado. ¿Por qué?",
+  o:["Porque SARSA usa una tasa de aprendizaje menor","Porque SARSA aprende el valor de la política que sigue, exploración incluida, y tiene en cuenta las caídas que provoca explorar","Porque Q-learning no usa recompensas negativas","Porque SARSA conoce el mapa"],c:1,
+  e:"Q-learning es fuera de política: aprende la política óptima aunque explore. SARSA es sobre la política: sus valores incluyen los tropiezos de la exploración, y por eso obtiene más mientras entrena (−25,7 frente a −48,5).",s:"7.5.2"},
+ {q:"En Gymnasium, step() devuelve terminated = False y truncated = True. ¿Qué ha pasado?",
+  o:["El agente ha llegado a la meta","El episodio se ha cortado por un límite de tiempo, aunque el estado siguiente todavía tiene valor futuro","Se ha producido un error","El agente ha caído en un agujero"],c:1,
+  e:"terminated indica un estado final de verdad; truncated, un corte. Por eso el valor futuro se anula con (not term) y no con (not fin).",s:"7.6.1"},
+ {q:"¿Para qué sirve la red objetivo de una DQN?",
+  o:["Para elegir las acciones durante la exploración","Para guardar la experiencia","Para que el objetivo de cada actualización no cambie a la vez que la red que se ajusta, lo que estabiliza el entrenamiento","Para aumentar la recompensa"],c:2,
+  e:"Es una copia de la red que solo se actualiza cada cierto número de pasos (500 en el ejemplo). La repetición de experiencia, por su parte, rompe la correlación entre muestras.",s:"7.7.2"},
+ {q:"Recompensas a un agente solo por las piezas producidas por hora. ¿Qué riesgo hay?",
+  o:["Ninguno, si la recompensa es alta","Que aprenda demasiado despacio","Que encuentre un atajo, como forzar la máquina hasta romperla, porque la recompensa no incluye los costes reales","Que no pueda usar Q-learning"],c:2,
+  e:"El agente optimiza lo que se mide. La recompensa debe incluir costes y restricciones reales (desgaste, seguridad, consumo), y hay que observar su conducta, no solo su puntuación.",s:"7.9.1"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>

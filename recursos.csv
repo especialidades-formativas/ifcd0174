@@ -28,3 +28,8 @@ u6-02;ejecuta;k-medias, validación y agrupamiento jerárquico;lab/notebooks/ind
 u6-03;ejecuta;Densidad, PCA y t-SNE;lab/notebooks/index.html?path=u6/densidad_pca_tsne.ipynb
 u6-04;ejecuta;Anomalías, reglas de asociación y segmentación;lab/notebooks/index.html?path=u6/anomalias_asociacion.ipynb
 u6-05;compruebalo;Test de autoevaluación de la Unidad 6;recursos/u6/test.html
+u7-01;ejecuta;Bandidos, procesos de Markov e iteración de valores;lab/notebooks/index.html?path=u7/bandidos_bellman.ipynb
+u7-02;explora;Explorador de iteración de valores: el mantenimiento de una máquina;recursos/u7/mantenimiento.html
+u7-03;ejecuta;Q-learning y SARSA con Gymnasium;lab/notebooks/index.html?path=u7/qlearning_gymnasium.ipynb
+u7-04;ejecuta;Una Deep Q-Network en CartPole;lab/notebooks/index.html?path=u7/dqn_cartpole.ipynb
+u7-05;compruebalo;Test de autoevaluación de la Unidad 7;recursos/u7/test.html

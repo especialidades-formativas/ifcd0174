@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U7-02 · Iteración de valores: el mantenimiento de una máquina · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+<style>
+.rej{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:6px 18px;margin:8px 0}
+.rej label{display:flex;justify-content:space-between;gap:8px;font-size:15px;margin:0}
+.rej input{width:110px}
+.fila{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+button{margin:0}
+table{border-collapse:collapse;font-size:15px;margin-top:8px;width:100%}
+th,td{border:1px solid var(--claro);padding:5px 8px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+td.pol{font-weight:700;text-align:center}
+.prod{color:#1F5FA8}.rev{color:#b0601a}
+svg{width:100%;height:auto;display:block;margin-top:8px}
+#estado{font-weight:600}
+.nota{font-size:14px;color:#555}
+</style>
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 7 · U7-02 · Explora</div>
+<h1>Iteración de valores: el mantenimiento de una máquina</h1></header>
+<main>
+<p>Es el ejemplo de los apartados 7.3 y 7.4. Una máquina está <strong>nueva</strong>, con
+<strong>desgaste leve</strong>, con <strong>desgaste fuerte</strong> o <strong>averiada</strong>.
+En cada periodo se decide si <span class="prod">producir</span> o <span class="rev">revisar</span>.
+Cambia los beneficios, los costes, las probabilidades de desgaste o el factor de descuento
+y observa cómo la ecuación de Bellman, aplicada una y otra vez, llega a la política óptima.</p>
+
+<div class="rej">
+<label>Beneficio nueva <input type="number" id="b0" value="10" step="1"></label>
+<label>Beneficio desgaste leve <input type="number" id="b1" value="8" step="1"></label>
+<label>Beneficio desgaste fuerte <input type="number" id="b2" value="5" step="1"></label>
+<label>Coste de la revisión <input type="number" id="cr" value="6" step="1" min="0"></label>
+<label>Coste de la reparación <input type="number" id="ca" value="40" step="1" min="0"></label>
+<label>P(nueva → leve) <input type="number" id="p0" value="0.3" step="0.05" min="0" max="1"></label>
+<label>P(leve → fuerte) <input type="number" id="p1" value="0.4" step="0.05" min="0" max="1"></label>
+<label>P(fuerte → averiada) <input type="number" id="p2" value="0.5" step="0.05" min="0" max="1"></label>
+<label>Descuento γ <input type="number" id="g" value="0.9" step="0.05" min="0" max="0.99"></label>
+</div>
+<div class="fila">
+<button type="button" id="uno">Una iteración</button>
+<button type="button" id="diez">Diez iteraciones</button>
+<button type="button" id="fin">Hasta converger</button>
+<button type="button" id="cero">Volver a empezar</button>
+</div>
+<p id="estado" aria-live="polite"></p>
+<table>
+<thead><tr><th>Estado</th><th>Valor V(s)</th><th>Q(s, producir)</th><th>Q(s, revisar)</th><th>Mejor acción</th></tr></thead>
+<tbody id="tabla"></tbody>
+</table>
+<svg id="g2" viewBox="0 0 640 230" role="img" aria-label="Evolución de los valores de cada estado con las iteraciones"></svg>
+<p class="nota">Con los valores iniciales se llega a la política del libro en 238 iteraciones
+(tolerancia de 10<sup>−10</sup>): producir con la máquina nueva o con desgaste leve, y revisar
+con desgaste fuerte. Prueba a subir el coste de la revisión a 15 o a bajar el de la reparación
+a 10: ¿cuándo deja de compensar revisar? En el estado averiado la única opción es reparar.</p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).
+Método: Sutton y Barto (2018), <em>Reinforcement Learning: An Introduction</em>, 2.ª ed., MIT Press.</footer>
+<script>
+const $=id=>document.getElementById(id);
+const NOM=['Nueva','Desgaste leve','Desgaste fuerte','Averiada'];
+const COL=['#1F5FA8','#2a9d6f','#d98c1f','#a12d1f'];
+let V=[0,0,0,0],Q=[[0,0,0,0],[0,0,0,0]],it=0,conv=false,hist=[[0,0,0,0]];
+function modelo(){
+ const n=id=>+$(id).value, p=[n('p0'),n('p1'),n('p2')].map(x=>Math.min(1,Math.max(0,x)));
+ const P=[[[1-p[0],p[0],0,0],[0,1-p[1],p[1],0],[0,0,1-p[2],p[2]],[1,0,0,0]],
+          [[1,0,0,0],[1,0,0,0],[1,0,0,0],[1,0,0,0]]];
+ const R=[[n('b0'),n('b1'),n('b2'),-n('ca')],[-n('cr'),-n('cr'),-n('cr'),-n('ca')]];
+ return {P,R,g:Math.min(0.99,Math.max(0,n('g')))};
+}
+function paso(){
+ const {P,R,g}=modelo();
+ Q=[0,1].map(a=>[0,1,2,3].map(s=>R[a][s]+g*P[a][s].reduce((t,p,s2)=>t+p*V[s2],0)));
+ const Vn=[0,1,2,3].map(s=>Math.max(Q[0][s],Q[1][s]));
+ const d=Math.max(...Vn.map((v,i)=>Math.abs(v-V[i])));
+ V=Vn;it++;hist.push(V.slice());
+ if(d<1e-10)conv=true;
+}
+const f=(v,dd=2)=>v.toLocaleString('es-ES',{minimumFractionDigits:dd,maximumFractionDigits:dd});
+function dibuja(){
+ const pol=[0,1,2,3].map(s=>s===3?'reparar':(Q[1][s]>Q[0][s]+1e-12?'revisar':'producir'));
+ $('tabla').innerHTML=[0,1,2,3].map(s=>`<tr><td>${NOM[s]}</td><td>${f(V[s])}</td><td>${s===3?'—':f(Q[0][s])}</td><td>${s===3?'—':f(Q[1][s])}</td><td class="pol ${pol[s]==='revisar'?'rev':'prod'}">${it?pol[s]:'—'}</td></tr>`).join('');
+ $('estado').textContent=conv?`Convergido en ${it} iteraciones: los valores ya no cambian.`:`Iteración ${it}.`;
+ ['uno','diez','fin'].forEach(b=>$(b).disabled=conv);
+ // gráfico
+ const W=640,H=230,M=40,n=Math.max(10,hist.length-1);
+ const all=hist.flat(),lo=Math.min(0,...all),hi=Math.max(1,...all);
+ const X=i=>M+i/n*(W-M-150),Y=v=>H-28-(v-lo)/(hi-lo)*(H-50);
+ let s=`<line x1="${M}" y1="${Y(0)}" x2="${W-150}" y2="${Y(0)}" stroke="#ccd"/><line x1="${M}" y1="${H-28}" x2="${M}" y2="12" stroke="#ccd"/>`;
+ s+=`<text x="${(W-150+M)/2}" y="${H-6}" font-size="12" text-anchor="middle">iteración (0 a ${n})</text>`;
+ s+=`<text x="${M-6}" y="${Y(hi)+4}" font-size="11" text-anchor="end">${f(hi,0)}</text><text x="${M-6}" y="${Y(lo)+4}" font-size="11" text-anchor="end">${f(lo,0)}</text>`;
+ for(let k=0;k<4;k++){
+  const pts=hist.map((h,i)=>`${X(i).toFixed(1)},${Y(h[k]).toFixed(1)}`).join(' ');
+  s+=`<polyline points="${pts}" fill="none" stroke="${COL[k]}" stroke-width="2"/>`;
+  s+=`<text x="${W-142}" y="${30+k*18}" font-size="12" fill="${COL[k]}">● ${NOM[k]}</text>`;
+ }
+ $('g2').innerHTML=s;
+}
+function reinicia(){V=[0,0,0,0];Q=[[0,0,0,0],[0,0,0,0]];it=0;conv=false;hist=[[0,0,0,0]];dibuja()}
+$('uno').onclick=()=>{if(!conv)paso();dibuja()};
+$('diez').onclick=()=>{for(let i=0;i<10&&!conv;i++)paso();dibuja()};
+$('fin').onclick=()=>{let i=0;while(!conv&&i<5000){paso();i++}dibuja()};
+$('cero').onclick=reinicia;
+document.querySelectorAll('input').forEach(e=>e.addEventListener('change',reinicia));
+window.__mant={paso,get V(){return V},get it(){return it},get conv(){return conv},get Q(){return Q}};
+reinicia();
+</script>
+</body>
+</html>
