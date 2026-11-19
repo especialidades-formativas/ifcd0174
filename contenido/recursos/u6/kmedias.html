@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U6-02 · Explorador de k-medias · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+<style>
+svg{width:100%;height:auto;display:block;margin-top:6px;touch-action:manipulation}
+.fila{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.fila label{margin:0}
+button{margin:0}
+table{border-collapse:collapse;font-size:15px;margin-top:8px}
+th,td{border:1px solid var(--claro);padding:5px 9px;text-align:right}
+th:first-child,td:first-child{text-align:left}
+#estado{font-weight:600}
+.nota{font-size:14px;color:#555}
+</style>
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 6 · U6-02 · Explora</div>
+<h1>Explorador de k-medias</h1></header>
+<main>
+<p>Los 178 vinos del libro proyectados sobre sus dos primeros componentes principales
+(figura 6.5). Elige el número de grupos y la forma de colocar los centroides iniciales, y
+avanza paso a paso: <strong>asignar</strong> cada vino al centroide más cercano y
+<strong>actualizar</strong> cada centroide como la media de su grupo (algoritmo de Lloyd,
+figura 6.1). También puedes pulsar sobre el gráfico para colocar tú los centroides.</p>
+
+<div class="fila">
+<label for="k">Grupos (k): <span id="kv">3</span></label>
+<input type="range" id="k" min="2" max="6" step="1" value="3" style="width:140px">
+<label><input type="radio" name="ini" value="pp" checked> k-means++</label>
+<label><input type="radio" name="ini" value="al"> aleatoria</label>
+<label><input type="radio" name="ini" value="man"> a mano</label>
+</div>
+<div class="fila">
+<button type="button" id="nuevo">Nuevos centroides</button>
+<button type="button" id="paso">Siguiente paso</button>
+<button type="button" id="fin">Hasta converger</button>
+<label><input type="checkbox" id="cult"> Mostrar los cultivares reales</label>
+</div>
+
+<svg id="g" viewBox="0 0 640 430" role="img" aria-label="Vinos en el plano de los dos primeros componentes y centroides de k-medias"></svg>
+<p id="estado" aria-live="polite"></p>
+<table>
+<tr><th>Iteración</th><td id="it"></td></tr>
+<tr><th>Inercia en el plano</th><td id="in"></td></tr>
+<tr><th>ARI frente a los cultivares</th><td id="ari"></td></tr>
+</table>
+<p class="nota">La inercia se calcula aquí sobre las dos coordenadas del gráfico, no sobre las 13
+variables. Con k = 3 verás que, según el punto de partida, el algoritmo termina en soluciones
+distintas con inercias casi iguales (entre 259,5 y 260,2) y un ARI entre 0,85 y 0,91. La de
+menor inercia, 259,5, es la del libro (ARI ≈ 0,895): scikit-learn repite el algoritmo con
+<code>n_init=10</code> y se queda con la mejor. Para ver mínimos locales claramente peores,
+prueba k = 2 o k = 5 con la inicialización aleatoria varias veces y compara la inercia final
+(apartado 6.2.2).</p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).
+Datos: Aeberhard y Forina (1991), UCI Machine Learning Repository, https://doi.org/10.24432/C5PC7J</footer>
+<script>
+const P=[[3.317, 1.443], [2.209, -0.333], [2.517, 1.031], [3.757, 2.756], [1.009, 0.87], [3.05, 2.122], [2.449, 1.175], [2.059, 1.609], [2.511, 0.918], [2.754, 0.789], [3.48, 1.302], [1.755, 0.612], [2.113, 0.676], [3.458, 1.131], [4.313, 2.096], [2.305, 1.663], [2.172, 2.327], [1.899, 1.631], [3.542, 2.518], [2.085, 1.061], [3.124, 0.787], [1.087, 0.242], [2.535, -0.092], [1.645, -0.516], [1.762, -0.317], [0.99, 0.941], [1.775, 0.686], [1.235, -0.09], [2.188, 0.69], [2.256, 0.191], [2.5, 1.241], [2.677, 1.472], [1.629, 0.053], [1.903, 1.633], [1.41, 0.698], [1.904, 0.177], [1.385, 0.659], [1.122, 0.114], [1.502, -0.769], [2.53, 1.803], [2.588, 0.78], [0.668, 0.17], [3.071, 1.156], [0.462, 0.331], [2.101, -0.071], [1.136, 1.777], [2.727, 1.191], [2.821, 0.646], [2.01, 1.247], [2.707, 1.752], [3.215, 0.167], [2.859, 0.745], [3.506, 1.613], [2.225, 1.875], [2.147, 1.017], [2.469, 1.329], [2.742, 1.437], [2.174, 1.212], [3.139, 1.732], [-0.929, -3.073], [-1.542, -1.381], [-1.836, -0.83], [0.031, -1.263], [2.05, -1.925], [-0.61, -1.908], [0.9, -0.764], [2.249, -1.885], [0.183, -2.427], [-0.813, -0.221], [1.976, -1.403], [-1.572, -0.885], [1.658, -0.957], [-0.725, -1.064], [2.562, 0.26], [1.833, -1.288], [-0.868, -2.444], [0.37, -2.154], [-1.457, -1.383], [1.263, -0.771], [0.376, -1.027], [0.762, -3.375], [1.035, -1.451], [-0.495, -2.381], [-2.539, -0.087], [0.835, -1.474], [0.788, -2.027], [-0.807, -2.234], [-0.558, -2.373], [-1.115, -1.802], [-0.556, -2.658], [-1.349, -2.118], [-1.564, -1.852], [-1.933, -1.559], [0.747, -2.313], [0.957, -2.224], [2.544, 0.169], [-0.544, -0.369], [1.031, -2.566], [2.252, -1.433], [1.41, -2.166], [0.798, -2.377], [-0.55, -2.293], [-0.161, -1.164], [-0.66, -2.68], [0.392, -2.099], [-1.772, -1.717], [-0.366, -2.169], [-1.621, -1.356], [0.083, -2.306], [1.578, -1.462], [1.421, -1.418], [-0.279, -1.931], [-1.303, -0.763], [-0.457, -2.269], [-0.494, -1.939], [0.482, -3.872], [-0.253, -2.821], [-0.107, -1.929], [-2.433, -1.257], [-0.551, -2.222], [0.74, -1.409], [1.336, 0.253], [-1.177, -0.664], [-0.462, -0.618], [0.978, -1.446], [-0.097, -2.11], [0.038, -1.267], [-1.597, -1.208], [-0.48, -1.939], [-1.793, -1.15], [-1.327, 0.17], [-2.385, 0.375], [-2.937, 0.264], [-2.147, 0.368], [-2.37, -0.46], [-3.064, 0.353], [-3.916, 0.155], [-3.936, 0.66], [-3.094, 0.349], [-2.374, 0.292], [-2.779, 0.287], [-2.287, 0.373], [-2.986, 0.489], [-2.375, 0.482], [-2.21, 1.16], [-2.626, 0.563], [-4.281, 0.65], [-3.583, 1.273], [-2.807, 1.571], [-2.9, 2.041], [-2.321, 2.356], [-2.55, 2.045], [-1.813, 1.528], [-2.76, 2.139], [-2.737, 0.41], [-3.605, 1.802], [-2.89, 1.925], [-3.392, 1.312], [-1.048, 3.515], [-1.61, 2.407], [-3.143, 0.738], [-2.24, 1.175], [-2.848, 0.556], [-2.597, 0.698], [-2.949, 1.555], [-3.53, 0.883], [-2.406, 2.592], [-2.929, 1.274], [-2.181, 2.078], [-2.381, 2.589], [-3.212, -0.251], [-3.678, 0.848], [-2.466, 2.194], [-3.371, 2.216], [-2.602, 1.757], [-2.678, 2.761], [-2.387, 2.297], [-3.209, 2.769]],Y=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+const $=id=>document.getElementById(id);
+const COL=['#1F5FA8','#d98c1f','#2a9d6f','#a12d1f','#7b4fa8','#5b6b7a'];
+const W=640,H=430,M=34,x0=-4.6,x1=4.6,y0=-4.2,y1=3.9;
+const X=v=>M+(v-x0)/(x1-x0)*(W-2*M),Yp=v=>H-M-(v-y0)/(y1-y0)*(H-2*M);
+const Xi=px=>x0+(px-M)/(W-2*M)*(x1-x0),Yi=py=>y0+(H-M-py)/(H-2*M)*(y1-y0);
+let C=[],L=new Array(P.length).fill(-1),fase='asignar',it=0,conv=false;
+const d2=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2;
+function k(){return +$('k').value}
+function ini(){return document.querySelector('input[name=ini]:checked').value}
+function inicia(){
+ const K=k();C=[];L.fill(-1);it=0;conv=false;fase='asignar';
+ const m=ini();
+ if(m==='al'){const idx=[];while(idx.length<K){const i=Math.floor(Math.random()*P.length);if(!idx.includes(i))idx.push(i)}C=idx.map(i=>P[i].slice())}
+ else if(m==='pp'){C=[P[Math.floor(Math.random()*P.length)].slice()];
+  while(C.length<K){const D=P.map(p=>Math.min(...C.map(c=>d2(p,c))));const s=D.reduce((a,b)=>a+b,0);let r=Math.random()*s,i=0;
+   for(;i<P.length-1;i++){r-=D[i];if(r<=0)break}C.push(P[i].slice())}}
+ dibuja();
+}
+function asigna(){let cambia=false;P.forEach((p,i)=>{let b=0,bd=1e9;C.forEach((c,j)=>{const d=d2(p,c);if(d<bd){bd=d;b=j}});if(L[i]!==b){cambia=true;L[i]=b}});return cambia}
+function actualiza(){C=C.map((c,j)=>{const g=P.filter((p,i)=>L[i]===j);return g.length?[g.reduce((a,p)=>a+p[0],0)/g.length,g.reduce((a,p)=>a+p[1],0)/g.length]:c})}
+function paso(){
+ if(C.length<k()||conv)return;
+ if(fase==='asignar'){const c=asigna();if(!c&&it>0){conv=true}else{it++}fase='actualizar'}
+ else{actualiza();fase='asignar'}
+ dibuja();
+}
+function hasta(){if(C.length<k())return;let n=0;while(!conv&&n<400){paso();n++}}
+function inercia(){return P.reduce((a,p,i)=>a+(L[i]<0?0:d2(p,C[L[i]])),0)}
+function ari(a,b){const n=a.length,t={},ra={},rb={};a.forEach((u,i)=>{const v=b[i];t[u+','+v]=(t[u+','+v]||0)+1;ra[u]=(ra[u]||0)+1;rb[v]=(rb[v]||0)+1});
+ const c2=x=>x*(x-1)/2,s=Object.values(t).reduce((x,v)=>x+c2(v),0),sa=Object.values(ra).reduce((x,v)=>x+c2(v),0),sb=Object.values(rb).reduce((x,v)=>x+c2(v),0),e=sa*sb/c2(n),mx=(sa+sb)/2;
+ return mx===e?1:(s-e)/(mx-e)}
+const f=(v,d)=>v.toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+function dibuja(){
+ let g=`<rect x="${M}" y="${M-10}" width="${W-2*M}" height="${H-2*M+10}" fill="none" stroke="#ccd"/>`;
+ for(let v=-4;v<=4;v+=2)g+=`<text x="${X(v)}" y="${H-M+16}" font-size="11" text-anchor="middle">${v}</text><text x="${M-6}" y="${Yp(v)+4}" font-size="11" text-anchor="end">${v<y0||v>y1?'':v}</text>`;
+ g+=`<text x="${W/2}" y="${H-4}" font-size="12" text-anchor="middle">CP1</text><text x="12" y="${H/2}" font-size="12" transform="rotate(-90 12 ${H/2})" text-anchor="middle">CP2</text>`;
+ const cult=$('cult').checked;
+ P.forEach((p,i)=>{const col=L[i]<0?'#b8bec6':COL[L[i]];
+  if(cult){const s=['circle','rect','tri'][Y[i]];const cx=X(p[0]),cy=Yp(p[1]);
+   g+=s==='circle'?`<circle cx="${cx}" cy="${cy}" r="4" fill="${col}" opacity=".85"/>`:s==='rect'?`<rect x="${cx-3.5}" y="${cy-3.5}" width="7" height="7" fill="${col}" opacity=".85"/>`:`<path d="M${cx},${cy-4.5}L${cx+4.5},${cy+3.5}L${cx-4.5},${cy+3.5}Z" fill="${col}" opacity=".85"/>`}
+  else g+=`<circle cx="${X(p[0])}" cy="${Yp(p[1])}" r="3.6" fill="${col}" opacity=".85"/>`});
+ C.forEach((c,j)=>{const cx=X(c[0]),cy=Yp(c[1]);let s='';for(let a=0;a<10;a++){const r=a%2?5:12,t=-Math.PI/2+a*Math.PI/5;s+=(a?'L':'M')+(cx+r*Math.cos(t)).toFixed(1)+','+(cy+r*Math.sin(t)).toFixed(1)}
+  g+=`<path d="${s}Z" fill="${COL[j]}" stroke="#fff" stroke-width="1.5"/>`});
+ if(cult)g+=`<text x="${W-M-4}" y="${M+6}" font-size="11" text-anchor="end">● cultivar 1   ■ cultivar 2   ▲ cultivar 3</text>`;
+ $('g').innerHTML=g;
+ $('kv').textContent=k();
+ const K=k(),asign=L[0]>=0;
+ $('it').textContent=it;
+ $('in').textContent=asign?f(inercia(),1):'—';
+ $('ari').textContent=asign?f(ari(L,Y),3):'—';
+ $('estado').textContent=C.length<K?`Pulsa sobre el gráfico para colocar ${K-C.length} centroide${K-C.length>1?'s':''} más.`:
+  conv?`Convergido en ${it} iteraciones: ningún vino cambia de grupo.`:
+  fase==='asignar'?'Siguiente paso: asignar cada vino al centroide más cercano.':'Siguiente paso: mover cada centroide a la media de su grupo.';
+ $('paso').disabled=$('fin').disabled=C.length<K||conv;
+}
+$('g').addEventListener('click',e=>{if(ini()!=='man'||C.length>=k())return;const r=$('g').getBoundingClientRect();
+ C.push([Xi((e.clientX-r.left)*W/r.width),Yi((e.clientY-r.top)*H/r.height)]);dibuja()});
+$('nuevo').onclick=inicia;$('paso').onclick=paso;$('fin').onclick=hasta;
+$('k').oninput=inicia;document.querySelectorAll('input[name=ini]').forEach(e=>e.onchange=inicia);$('cult').onchange=dibuja;
+window.__kmedias={inicia,hasta,ari,get L(){return L},get conv(){return conv},inercia};
+inicia();
+</script>
+</body>
+</html>

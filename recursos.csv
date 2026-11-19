@@ -23,3 +23,8 @@ u5-02;ejecuta;Árboles, conjuntos y SVM;lab/notebooks/index.html?path=u5/arboles
 u5-03;explora;Explorador del umbral de decisión;recursos/u5/umbral.html
 u5-04;ejecuta;Validación, métricas y clases desequilibradas;lab/notebooks/index.html?path=u5/validacion_metricas.ipynb
 u5-05;compruebalo;Test de autoevaluación de la Unidad 5;recursos/u5/test.html
+u6-01;explora;Explorador de k-medias;recursos/u6/kmedias.html
+u6-02;ejecuta;k-medias, validación y agrupamiento jerárquico;lab/notebooks/index.html?path=u6/kmedias_jerarquico.ipynb
+u6-03;ejecuta;Densidad, PCA y t-SNE;lab/notebooks/index.html?path=u6/densidad_pca_tsne.ipynb
+u6-04;ejecuta;Anomalías, reglas de asociación y segmentación;lab/notebooks/index.html?path=u6/anomalias_asociacion.ipynb
+u6-05;compruebalo;Test de autoevaluación de la Unidad 6;recursos/u6/test.html

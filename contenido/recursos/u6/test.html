@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U6-05 · Test de autoevaluación · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 6 · U6-05 · Comprueba</div>
+<h1>Test de autoevaluación de la Unidad 6</h1></header>
+<main>
+<p>Ocho preguntas sobre la unidad. Al corregir verás la explicación y el apartado del libro donde
+repasarla. Tus respuestas no se guardan ni se envían a ningún sitio.</p>
+<form id="f"></form>
+<button type="button" id="b">Corregir</button>
+<p id="nota" class="res"></p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+const P=[
+ {q:"Agrupas clientes por edad (años) e ingresos anuales (euros) con k-medias sin transformar las variables. ¿Qué ocurrirá?",
+  o:["Las dos variables pesarán lo mismo","Los ingresos dominarán la distancia y los grupos dependerán casi solo de ellos","La edad dominará porque tiene menos valores distintos","k-medias corrige las escalas automáticamente"],c:1,
+  e:"La distancia euclídea suma diferencias al cuadrado: la variable con valores más grandes manda. Con los vinos, el ARI pasa de 0,371 sin escalar a 0,897 estandarizando (ejemplo 1).",s:"6.1.2"},
+ {q:"¿Qué dos pasos alterna el algoritmo de Lloyd?",
+  o:["Dividir el grupo más grande y fusionar los dos más cercanos","Asignar cada caso al centroide más cercano y recalcular cada centroide como la media de su grupo","Calcular densidades y marcar el ruido","Proyectar sobre componentes principales y agrupar"],c:1,
+  e:"Se repiten hasta que ningún caso cambia de grupo; cada paso reduce (o mantiene) la inercia.",s:"6.2.1"},
+ {q:"La inercia de k-medias baja siempre al aumentar k. ¿Por qué no basta para elegir k?",
+  o:["Porque con k igual al número de casos la inercia es cero, sin que eso sea un buen agrupamiento","Porque la inercia solo vale para k = 3","Porque la inercia sube con datos estandarizados","Porque la inercia necesita etiquetas"],c:0,
+  e:"Por eso se usan índices que penalizan los grupos poco separados, como la silueta, Calinski-Harabasz o Davies-Bouldin; con los vinos, los tres señalan k = 3 (ejemplo 3).",s:"6.3.1"},
+ {q:"Comparas un agrupamiento con una clasificación conocida y obtienes un índice de Rand ajustado (ARI) cercano a 0. ¿Qué significa?",
+  o:["Que los grupos coinciden exactamente con las clases","Que los grupos coinciden con las clases como cabría esperar por azar","Que el agrupamiento tiene cero grupos","Que la inercia es mínima"],c:1,
+  e:"El ARI vale 1 si las particiones coinciden y está alrededor de 0 si se parecen como por azar; es lo que pasa con el enlace medio en los vinos (ejemplo 5).",s:"6.3.2"},
+ {q:"Tus datos forman dos medias lunas entrelazadas. ¿Qué método es más adecuado para separarlas?",
+  o:["k-medias con k = 2","DBSCAN","PCA con dos componentes","Reglas de asociación"],c:1,
+  e:"DBSCAN agrupa por densidad y sigue formas no esféricas: ARI 1,0 frente a 0,269 de k-medias (ejemplo 6).",s:"6.5.1"},
+ {q:"En los vinos, los dos primeros componentes principales explican el 36,2 % y el 19,2 % de la varianza. ¿Qué afirmación es correcta?",
+  o:["Juntos explican el 55,4 % y se pierde el resto","Juntos explican el 100 % porque son los más importantes","El primero explica más porque tiene más variables","El segundo componente es una variable original del conjunto"],c:0,
+  e:"Las proporciones se suman: 55,4 %. Hacen falta cinco componentes para superar el 80 % (ejemplo 7).",s:"6.6.1"},
+ {q:"En un mapa de t-SNE, dos grupos aparecen muy separados. ¿Qué puedes concluir?",
+  o:["Que en los datos originales están igual de lejos","Que el grupo más grande del mapa tiene más casos","Nada seguro: hay que comprobarlo con otros métodos o índices","Que el agrupamiento es óptimo"],c:2,
+  e:"t-SNE conserva sobre todo quién es vecino de quién; las distancias entre grupos y sus tamaños en el mapa no son fiables.",s:"6.7"},
+ {q:"En 10 órdenes de trabajo, el rodamiento aparece en 5, la grasa en 4 y los dos juntos en 4. ¿Cuánto vale el lift de rodamiento ⇒ grasa?",
+  o:["0,8","0,4","1,0","2,0"],c:3,
+  e:"Confianza = 0,4/0,5 = 0,8; lift = 0,8/0,4 = 2,0: pedir un rodamiento duplica la probabilidad de pedir grasa (ejemplo 9).",s:"6.9"}
+];
+const f=document.getElementById('f');
+P.forEach((p,i)=>{const d=document.createElement('div');d.className='preg';
+ d.innerHTML='<p>'+(i+1)+'. '+p.q+'</p>'+p.o.map((o,j)=>'<label><input type="radio" name="p'+i+'" value="'+j+'"> '+o+'</label>').join('')+'<div class="fb" id="fb'+i+'"></div>';
+ f.append(d)});
+document.getElementById('b').onclick=()=>{let ok=0;
+ P.forEach((p,i)=>{const s=f.querySelector('input[name=p'+i+']:checked');const fb=document.getElementById('fb'+i);
+  const bien=s&&+s.value===p.c;if(bien)ok++;
+  fb.innerHTML=(bien?'<span class="ok">Correcto.</span> ':'<span class="mal">'+(s?'No es correcto.':'Sin responder.')+'</span> Respuesta: '+p.o[p.c]+'. ')+p.e+' <em>Repasa el apartado '+p.s+'.</em>'});
+ document.getElementById('nota').textContent='Aciertos: '+ok+' de '+P.length;};
+</script>
+</body>
+</html>
