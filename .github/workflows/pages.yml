@@ -27,6 +27,8 @@ jobs:
           for nb in contenido/notebooks/*/*.ipynb; do
             jupyter nbconvert --to notebook --execute --ExecutePreprocessor.kernel_name=python3 --stdout "$nb" > /dev/null
           done
+      - name: Borrar los archivos que generan los notebooks al ejecutarse
+        run: git clean -fdx contenido
       - name: Construir la web
         run: python herramientas/construir.py
       - uses: actions/upload-pages-artifact@v3
