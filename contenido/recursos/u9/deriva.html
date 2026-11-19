@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U9-03 · Explorador de deriva: KS y PSI de una variable · IFCD0174</title>
+<link rel="stylesheet" href="../estilo.css">
+<style>
+.rej{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:8px 22px;margin:8px 0}
+.rej label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;margin:0}
+.rej input[type=range]{width:130px}
+.rej output{min-width:56px;text-align:right;font-variant-numeric:tabular-nums}
+.res{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0}
+.res div{background:#EEF4FA;padding:8px 14px;min-width:120px}
+.res b{display:block;font-size:22px;color:#1F5FA8;font-variant-numeric:tabular-nums}
+svg{width:100%;height:auto;display:block;margin-top:6px}
+.ref{fill:#1F5FA8;opacity:.45}.nue{fill:#b0601a;opacity:.45}
+.nota{font-size:14px;color:#555}
+</style>
+</head>
+<body>
+<header><div class="cod">IFCD0174 · Unidad 9 · U9-03 · Explora</div>
+<h1>Explorador de deriva: KS y PSI de una variable</h1></header>
+<main>
+<p>Es la idea del apartado 9.9. Se simulan temperaturas de <span style="color:#1F5FA8">referencia</span>
+(como las de enero a junio: media 62,2&nbsp;°C, desviación 2,45&nbsp;°C) y temperaturas
+<span style="color:#b0601a">nuevas</span>, en las que una parte de la flota mide unos grados de más.
+Mueve los controles y observa cómo responden las dos medidas de deriva.</p>
+
+<div class="rej">
+<label>Grados de más <input type="range" id="d" min="0" max="6" step="0.25" value="3"><output id="od"></output></label>
+<label>Parte de la flota afectada <input type="range" id="f" min="0" max="100" step="5" value="50"><output id="of"></output></label>
+<label>Lecturas en cada muestra <input type="range" id="n" min="2" max="5" step="0.5" value="4"><output id="on"></output></label>
+<label>Intervalos del PSI <input type="range" id="b" min="4" max="20" step="1" value="10"><output id="ob"></output></label>
+</div>
+<div class="res">
+<div>KS<b id="ks">–</b></div>
+<div>PSI<b id="psi">–</b></div>
+<div>Diferencia de medias<b id="dm">–</b></div>
+</div>
+<svg id="g" viewBox="0 0 640 240" role="img" aria-label="Histogramas de las temperaturas de referencia y nuevas"></svg>
+<p class="nota">Las dos muestras son aleatorias: con 0 grados de más el KS y el PSI no son
+exactamente cero, y con muestras pequeñas varían más. Prueba a dejar los grados en 3 y bajar
+la parte de la flota afectada: ¿a partir de qué porcentaje dejarías de notar el cambio? Y con
+pocas lecturas, ¿se confunde el ruido con una deriva real?</p>
+</main>
+<footer>Recurso complementario del libro <em>Machine Learning e Inteligencia Artificial</em> (IFCD0174).</footer>
+<script>
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function normal(r){let u=0,v=0;while(u===0)u=r();v=r();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
+const MU=62.2,SD=2.45;
+function muestras(n,desv,frac){
+  const r=rng(12345),ref=new Float64Array(n),nue=new Float64Array(n);
+  for(let i=0;i<n;i++)ref[i]=MU+SD*normal(r);
+  for(let i=0;i<n;i++)nue[i]=MU+SD*normal(r)+(r()<frac?desv:0);
+  return[ref,nue]}
+function ks(a,b){a=[...a].sort((x,y)=>x-y);b=[...b].sort((x,y)=>x-y);
+  let i=0,j=0,d=0;while(i<a.length&&j<b.length){const x=Math.min(a[i],b[j]);
+  while(i<a.length&&a[i]<=x)i++;while(j<b.length&&b[j]<=x)j++;
+  d=Math.max(d,Math.abs(i/a.length-j/b.length))}return d}
+function psi(e,a,B){const s=[...e].sort((x,y)=>x-y),bo=[];
+  for(let k=1;k<B;k++)bo.push(s[Math.floor(k*s.length/B)]);
+  const cnt=v=>{const c=new Array(B).fill(0);for(const x of v){let k=0;while(k<B-1&&x>bo[k])k++;c[k]++}return c.map(z=>Math.max(z/v.length,1e-6))};
+  const pe=cnt(e),pa=cnt(a);let t=0;for(let k=0;k<B;k++)t+=(pa[k]-pe[k])*Math.log(pa[k]/pe[k]);return t}
+function hist(v,lo,hi,m){const c=new Array(m).fill(0);for(const x of v){const k=Math.floor((x-lo)/(hi-lo)*m);if(k>=0&&k<m)c[k]++}return c.map(z=>z/v.length)}
+const $=id=>document.getElementById(id),fmt=(x,d)=>x.toFixed(d).replace('.',',');
+function dibujar(ref,nue){
+  const lo=52,hi=78,m=52,hr=hist(ref,lo,hi,m),hn=hist(nue,lo,hi,m),mx=Math.max(...hr,...hn)*1.1;
+  const W=640,H=240,L=40,R=10,T=10,Bm=34,w=(W-L-R)/m;
+  let s='';
+  [[hr,'ref'],[hn,'nue']].forEach(([h,c])=>h.forEach((y,k)=>{const hh=(H-T-Bm)*y/mx;
+    s+=`<rect class="${c}" x="${(L+k*w).toFixed(1)}" y="${(H-Bm-hh).toFixed(1)}" width="${(w-0.5).toFixed(1)}" height="${hh.toFixed(1)}"/>`}));
+  s+=`<line x1="${L}" y1="${H-Bm}" x2="${W-R}" y2="${H-Bm}" stroke="#555"/>`;
+  for(let t=54;t<=78;t+=4){const x=L+(t-lo)/(hi-lo)*(W-L-R);
+    s+=`<line x1="${x}" y1="${H-Bm}" x2="${x}" y2="${H-Bm+4}" stroke="#555"/><text x="${x}" y="${H-Bm+18}" font-size="12" text-anchor="middle">${t}</text>`}
+  s+=`<text x="${(W+L)/2}" y="${H-2}" font-size="12" text-anchor="middle">Temperatura (°C)</text>`;
+  $('g').innerHTML=s}
+function actualizar(){
+  const d=+$('d').value,f=+$('f').value/100,n=Math.round(10**+$('n').value),B=+$('b').value;
+  $('od').textContent=fmt(d,2)+' °C';$('of').textContent=Math.round(f*100)+' %';
+  $('on').textContent=n.toLocaleString('es-ES');$('ob').textContent=B;
+  const[ref,nue]=muestras(n,d,f);
+  const media=v=>v.reduce((a,b)=>a+b,0)/v.length;
+  $('ks').textContent=fmt(ks(ref,nue),3);$('psi').textContent=fmt(psi(ref,nue,B),3);
+  $('dm').textContent=fmt(media(nue)-media(ref),2)+' °C';
+  dibujar(ref,nue)}
+['d','f','n','b'].forEach(id=>$(id).addEventListener('input',actualizar));
+actualizar();
+</script>
+</body>
+</html>
